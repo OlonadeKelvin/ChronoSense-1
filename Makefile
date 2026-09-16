@@ -1,0 +1,64 @@
+# SPDX-FileCopyrightText: 2026 The HeiChips Contributors
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+
+MAKEFILE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+PDK_ROOT ?= $(MAKEFILE_DIR)/IHP-Open-PDK
+PDK ?= ihp-sg13cmos5l
+
+PDK_REPO_IHP_OPEN_PDK ?= https://github.com/iic-jku/IHP-Open-PDK.git
+PDK_COMMIT_IHP_OPEN_PDK ?= 1ffc783ff62e739856ee1b25e835338388c66c9e
+
+KLAYOUT_PLUGINS = KLayoutPluginUtils \
+                  AlignToolPlugin \
+                  MoveQuicklyToolPlugin \
+                  LayerShortcutsPlugin \
+                  AutoBackupPlugin \
+                  PinToolPlugin \
+                  LibraryManagerPlugin \
+                  VectorFileExportPlugin \
+                  NetlistImportPlugin \
+                  xsection
+
+help: ## Show this help message
+	@echo 'Usage: make [target]'
+	@echo ''
+	@echo 'Available targets:'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+.PHONY: help
+
+$(PDK_ROOT)/$(PDK):
+	mkdir -p $(PDK_ROOT)
+	# Clone repository (contains ihp-sg13g2 and ihp-sg13cmos5l)
+	@echo "Cloning repository…"
+	git clone $(PDK_REPO_IHP_OPEN_PDK) --recurse-submodules --depth=1 --revision $(PDK_COMMIT_IHP_OPEN_PDK) $(PDK_ROOT)
+	# Compile Verilog-A using OpenVAF-reloaded
+	@echo "Compiling Verilog-A models using OpenVAF-reloaded…"
+	cd $(PDK_ROOT)/$(PDK)/libs.tech/verilog-a/; ./openvaf-compile-va.sh
+	@echo "Congratulations, the PDK has been set up!"
+
+clone-pdk: $(PDK_ROOT)/$(PDK) ## Clone the IHP-Open-PDK repository
+.PHONY: clone-pdk
+
+klayout-setup: ## Install the KLayout plugins in your user directory
+	# Install KLayout Plugins
+	@echo "Installing KLayout Plugins…"
+	@for plugin in ${KLAYOUT_PLUGINS} ; do \
+		echo "- $$plugin…" ; \
+		KLAYOUT_PATH=$(PDK_ROOT)/$(PDK)/libs.tech/klayout/ klayout -t -ne -rr -b -y $$plugin ; \
+		sleep 1; \
+	done
+	@echo "All plugins have been installed!"
+.PHONY: klayout-setup
+
+precheck: $(PDK_ROOT)/$(PDK) ## Run the precheck on the design specified in submission.yaml
+	PDK_ROOT=$(PDK_ROOT) PDK=$(PDK) python3 .github/precheck/heichips_precheck.py --config submission.yaml
+.PHONY: precheck
+
+precheck-demo: $(PDK_ROOT)/$(PDK) ## Run the demo precheck (don't use for submission)
+	PDK_ROOT=$(PDK_ROOT) PDK=$(PDK) python3 .github/precheck/heichips_precheck.py --config submission.yaml --demo
+.PHONY: precheck-demo
+
+klayout: $(PDK_ROOT)/$(PDK) ## Open KLayout (edit mode)
+	KLAYOUT_PATH=$(PDK_ROOT)/$(PDK)/libs.tech/klayout/ klayout -e -n sg13cmos5l -c $(MAKEFILE_DIR)/config/klayoutrc
+.PHONY: klayout
