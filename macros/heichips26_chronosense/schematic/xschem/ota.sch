@@ -43,8 +43,8 @@ N 100 130 130 130 {lab=vdd}
 N 130 80 130 130 {lab=vdd}
 N 100 80 130 80 {lab=vdd}
 N 100 70 100 80 {lab=vdd}
-N -140 130 -80 130 {lab=#net1}
-N -140 260 -80 260 {lab=#net2}
+N -140 130 -80 130 {lab=vss}
+N -140 260 -80 260 {lab=vss}
 C {sg13g2_pr/sg13_lv_nmos.sym} -160 130 0 0 {name=M1
 l=0.5u
 w=5u
@@ -120,17 +120,6 @@ C {opin.sym} 100 350 1 0 {name=p10 lab=vout
 C {ipin.sym} -210 130 0 0 {name=p11 lab=vin}
 C {ipin.sym} -210 260 0 0 {name=p12 lab=vip
 }
-C {sg13g2_pr/rppd.sym} -80 -10 0 0 {name=R1
-w=0.5e-6
-l=0.5e-6
-model=rppd
-body=sub!
-spiceprefix=X
-b=0
- m=1
-  mm_ok=1
-value=30k
-}
 C {iopin.sym} -80 -80 3 0 {name=p13 lab=vdd}
 C {lab_pin.sym} -80 50 3 0 {name=p14 sig_type=std_logic lab=vb
 }
@@ -141,4 +130,15 @@ C {iopin.sym} 280 340 1 0 {name=p16 lab=vss
 C {iopin.sym} -80 130 2 1 {name=p17 lab=vss
 }
 C {iopin.sym} -80 260 2 1 {name=p18 lab=vss
+}
+C {sg13g2_pr/rppd.sym} -80 -10 0 0 {name=R2
+w=1u
+l=115.79u
+model=rppd
+body=sub!
+spiceprefix=X
+b=0
+ m=1
+  mm_ok=1
+value="expr_eng(  ( 70.0e-6 / @w + 260.0 * ( (@b + 1)* @l + ( 1.081*( @w + 6.0e-9 ) + 0.18e-6 )*@b ) / ( @w + 6.0e-9 ) ) / @m  )"
 }
