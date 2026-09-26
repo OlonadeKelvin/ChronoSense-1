@@ -21,12 +21,12 @@ N 220 220 280 220 {lab=vb}
 N 220 220 220 270 {lab=vb}
 N 220 270 240 270 {lab=vb}
 N -140 80 -140 100 {lab=vx}
-N -140 290 -140 320 {lab=vout}
+N -140 290 -140 350 {lab=vout}
 N -210 130 -180 130 {lab=vin}
 N -210 260 -180 260 {lab=vip}
 N -80 20 -80 50 {lab=vb}
-N -80 -80 -80 -40 {lab=vdd}
-N 280 320 280 340 {lab=vss}
+N -80 -70 -80 -40 {lab=vdd}
+N 280 330 280 340 {lab=vss}
 N 280 270 330 270 {lab=vss}
 N 330 270 330 320 {lab=vss}
 N 280 320 330 320 {lab=vss}
@@ -38,13 +38,29 @@ N 100 260 140 260 {lab=vdd}
 N 260 140 310 140 {lab=vss}
 N 310 90 310 140 {lab=vss}
 N 260 90 310 90 {lab=vss}
-N 260 80 260 90 {lab=vss}
 N 100 130 130 130 {lab=vdd}
 N 130 80 130 130 {lab=vdd}
 N 100 80 130 80 {lab=vdd}
-N 100 70 100 80 {lab=vdd}
 N -140 130 -80 130 {lab=vss}
 N -140 260 -80 260 {lab=vss}
+N 100 -70 100 80 {lab=vdd}
+N 0 -70 100 -70 {lab=vdd}
+N -80 -80 -80 -70 {lab=vdd}
+N -140 350 100 350 {lab=vout}
+N -80 130 -80 260 {lab=vss}
+N -80 260 -80 440 {lab=vss}
+N -80 440 250 440 {lab=vss}
+N 250 320 250 440 {lab=vss}
+N 250 320 280 320 {lab=vss}
+N 100 210 100 260 {lab=vdd}
+N -0 210 100 210 {lab=vdd}
+N 0 -70 -0 210 {lab=vdd}
+N -80 -70 0 -70 {lab=vdd}
+N 260 60 260 90 {lab=vss}
+N 260 60 390 60 {lab=vss}
+N 390 60 390 330 {lab=vss}
+N 280 330 390 330 {lab=vss}
+N 280 320 280 330 {lab=vss}
 C {sg13g2_pr/sg13_lv_nmos.sym} -160 130 0 0 {name=M1
 l=0.5u
 w=5u
@@ -73,19 +89,19 @@ model=sg13_lv_nmos
 spiceprefix=X
 }
 C {sg13g2_pr/sg13_lv_nmos.sym} 260 270 0 0 {name=M6
-l=0.13u
-w=0.15u
+l=1u
+w=5u
 ng=1
-m=1
+m=2
 mm_ok=1
 model=sg13_lv_nmos
 spiceprefix=X
 }
 C {sg13g2_pr/sg13_lv_nmos.sym} 240 140 2 1 {name=M5
-l=0.13u
-w=0.15u
+l=1u
+w=5u
 ng=1
-m=1
+m=2
 mm_ok=1
 model=sg13_lv_nmos
 spiceprefix=X
@@ -101,10 +117,6 @@ spiceprefix=X
 }
 C {lab_pin.sym} -140 190 0 0 {name=p1 sig_type=std_logic lab=vtail
 }
-C {iopin.sym} 100 70 3 0 {name=p3 lab=vdd}
-C {iopin.sym} 260 80 1 1 {name=p4 lab=vss
-}
-C {iopin.sym} 100 260 3 0 {name=p2 lab=vdd}
 C {lab_pin.sym} 260 200 0 0 {name=p5 sig_type=std_logic lab=vtail
 }
 C {lab_pin.sym} 220 250 0 0 {name=p6 sig_type=std_logic lab=vb
@@ -112,8 +124,6 @@ C {lab_pin.sym} 220 250 0 0 {name=p6 sig_type=std_logic lab=vb
 C {lab_pin.sym} -140 80 1 0 {name=p7 sig_type=std_logic lab=vx
 }
 C {lab_pin.sym} 60 180 3 0 {name=p8 sig_type=std_logic lab=vx
-}
-C {opin.sym} -140 320 1 0 {name=p9 lab=vout
 }
 C {opin.sym} 100 350 1 0 {name=p10 lab=vout
 }
@@ -126,10 +136,6 @@ C {lab_pin.sym} -80 50 3 0 {name=p14 sig_type=std_logic lab=vb
 C {lab_pin.sym} 220 140 0 0 {name=p15 sig_type=std_logic lab=vb
 }
 C {iopin.sym} 280 340 1 0 {name=p16 lab=vss
-}
-C {iopin.sym} -80 130 2 1 {name=p17 lab=vss
-}
-C {iopin.sym} -80 260 2 1 {name=p18 lab=vss
 }
 C {sg13g2_pr/rppd.sym} -80 -10 0 0 {name=R2
 w=1u

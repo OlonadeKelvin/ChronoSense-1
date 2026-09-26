@@ -1,0 +1,10 @@
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/inv.sch
+**.subckt inv vdd in out vss
+*.ipin in
+*.opin out
+*.iopin vdd
+*.iopin vss
+XM1 out in vdd vdd sg13_lv_pmos w=2u l=0.35u ng=1 m=1 mm_ok=1
+XM2 out in vss vss sg13_lv_nmos w=1u l=0.35u ng=1 m=1 mm_ok=1
+**.ends
+.end

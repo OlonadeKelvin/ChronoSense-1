@@ -1,0 +1,28 @@
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/schmitt.sch
+**.subckt schmitt vdd out in vss
+*.ipin in
+*.iopin vdd
+*.iopin vss
+*.opin out
+XM1 x in vss vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM2 y in vdd vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+XM3 net1 in x vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM4 x net1 vdd vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM5 net1 in y vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+XM6 y net1 vss vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+x1 vdd net1 out vss inv
+**.ends
+
+* expanding   symbol:  inv.sym # of pins=4
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/inv.sym
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/inv.sch
+.subckt inv vdd in out vss
+*.ipin in
+*.opin out
+*.iopin vdd
+*.iopin vss
+XM1 out in vdd vdd sg13_lv_pmos w=2u l=0.35u ng=1 m=1 mm_ok=1
+XM2 out in vss vss sg13_lv_nmos w=1u l=0.35u ng=1 m=1 mm_ok=1
+.ends
+
+.end

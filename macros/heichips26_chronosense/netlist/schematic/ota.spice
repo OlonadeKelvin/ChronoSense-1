@@ -1,0 +1,16 @@
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/ota.sch
+**.subckt ota vdd vin vip vss vout
+*.opin vout
+*.ipin vin
+*.ipin vip
+*.iopin vdd
+*.iopin vss
+XM1 vx vin vtail vss sg13_lv_nmos w=5u l=0.5u ng=1 m=4 mm_ok=1
+XM3 vx vx vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM2 vout vip vtail vss sg13_lv_nmos w=5u l=0.5u ng=1 m=4 mm_ok=1
+XM6 vb vb vss vss sg13_lv_nmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM5 vtail vb vss vss sg13_lv_nmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM4 vout vx vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=2 mm_ok=1
+XR2 vdd vb sub! rppd w=1u l=115.79u m=1 b=0 mm_ok=1
+**.ends
+.end
