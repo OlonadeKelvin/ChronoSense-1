@@ -1,5 +1,34 @@
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/testbenches/xschem/tb_core.sch
+**.subckt tb_core
+x1 out net3 net2 net1 0 chronosense_core
+V2 net2 0 0.6
+V3 net1 0 1.2
+R1 net3 0 10k
+**** begin user architecture code
+
+
+.lib $PDKPATH/libs.tech/ngspice/models/cornerMOSlv.lib mos_tt
+.lib $PDKPATH/libs.tech/ngspice/models/cornerRES.lib res_typ
+.lib $PDKPATH/libs.tech/ngspice/models/cornerCAP.lib cap_typ
+.param VDD=1.2 VREF=0.6 CT=15p
+.ic v(x1.ctn)=0.5
+.options method=gear reltol=1e-4 itl4=100
+.tran 50p 3u
+.control
+run
+meas tran t20  TRIG v(out) VAL=0.6 RISE=5 TARG v(out) VAL=0.6 RISE=25
+let tper = t20/20
+print tper
+.endc
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  chronosense_core.sym # of pins=5
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/chronosense_core.sym
 ** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/chronosense_core.sch
-**.subckt chronosense_core out pad vref vdd vss
+.subckt chronosense_core out pad vref vdd vss
 *.iopin pad
 *.ipin vref
 *.opin out
@@ -14,7 +43,8 @@ XXMMIR ctn vg vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=30 mm_ok=1
 XCc vg vss cap_cmim w=18.25u l=18.25u m=4 mm_ok=1
 XCT ctn vss cap_cmim w=25u l=25u m=16 mm_ok=1
 x2 vdd sch ctn vss schmitt
-**.ends
+.ends
+
 
 * expanding   symbol:  ota.sym # of pins=5
 ** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/ota.sym
