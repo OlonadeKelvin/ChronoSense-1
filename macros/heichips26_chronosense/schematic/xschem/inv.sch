@@ -20,20 +20,20 @@ V {}
 S {}
 F {}
 E {}
-N 480 -630 510 -630 {lab=in}
-N 480 -630 480 -550 {lab=in}
-N 480 -550 510 -550 {lab=in}
-N 550 -600 550 -580 {lab=out}
-N 550 -670 550 -660 {lab=vdd}
-N 550 -670 570 -670 {lab=vdd}
-N 550 -520 550 -500 {lab=vss}
-N 570 -500 580 -500 {lab=vss}
-N 550 -550 570 -550 {lab=vss}
-N 570 -550 570 -500 {lab=vss}
-N 550 -500 570 -500 {lab=vss}
-N 550 -630 570 -630 {lab=vdd}
-N 570 -670 570 -630 {lab=vdd}
-N 570 -670 580 -670 {lab=vdd}
+N 480 -630 510 -630 {lab=IN}
+N 480 -630 480 -550 {lab=IN}
+N 480 -550 510 -550 {lab=IN}
+N 550 -600 550 -580 {lab=OUT}
+N 550 -670 550 -660 {lab=VDD}
+N 570 -670 580 -670 {lab=VDD}
+N 550 -520 550 -500 {lab=VSS}
+N 570 -500 580 -500 {lab=VSS}
+N 550 -670 570 -670 {lab=VDD}
+N 550 -500 570 -500 {lab=VSS}
+N 550 -630 570 -630 {lab=VDD}
+N 570 -670 570 -630 {lab=VDD}
+N 550 -550 570 -550 {lab=VSS}
+N 570 -550 570 -500 {lab=VSS}
 C {sg13g2_pr/sg13_lv_pmos.sym} 530 -630 0 0 {name=M1
 l=0.35u
 w=2u
@@ -52,9 +52,10 @@ mm_ok=1
 model=sg13_lv_nmos
 spiceprefix=X
 }
-C {ipin.sym} 480 -590 0 0 {name=p1 lab=in}
-C {opin.sym} 550 -590 0 0 {name=p2 lab=out
+C {ipin.sym} 480 -590 0 0 {name=p1 lab=IN}
+C {opin.sym} 550 -590 0 0 {name=p2 lab=OUT
 }
-C {iopin.sym} 580 -670 0 0 {name=p3 lab=vdd}
-C {iopin.sym} 580 -500 0 0 {name=p4 lab=vss
+C {iopin.sym} 580 -670 0 0 {name=p3 lab=VDD
+}
+C {iopin.sym} 580 -500 0 0 {name=p4 lab=VSS
 }

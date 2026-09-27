@@ -1,0 +1,102 @@
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/testbenches/xschem/tb_core.sch
+**.subckt tb_core
+x1 out net3 net2 net1 0 chronosense_core
+V2 net2 0 0.6
+V3 net1 0 1.2
+R1 net3 0 10000
+**** begin user architecture code
+
+
+.lib $PDKPATH/libs.tech/ngspice/models/cornerMOSlv.lib mos_ss
+.lib $PDKPATH/libs.tech/ngspice/models/cornerRES.lib res_typ
+.lib $PDKPATH/libs.tech/ngspice/models/cornerCAP.lib cap_typ
+.temp -40
+.param VDD=1.08 VREF=0.6 CT=15p
+.ic v(x1.ctn)=0.5400
+.options method=gear reltol=1e-4 itl4=100
+.tran 2.7e-10 3e-06 0 2.7e-10
+.control
+run
+meas tran t20  TRIG v(out) VAL=0.5400 RISE=5 TARG v(out) VAL=0.5400 RISE=25
+meas tran vmax MAX v(x1.ctn) FROM=1.8e-06 TO=2.4e-06
+meas tran vmin MIN v(x1.ctn) FROM=1.8e-06 TO=2.4e-06
+meas tran vpad AVG v(net3) FROM=1.8e-06 TO=2.4e-06
+echo "PVT mos_ss 1.08 -40 res_typ cap_typ 10000 $&t20 $&vmax $&vmin $&vpad"
+quit
+.endc
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  chronosense_core.sym # of pins=5
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/chronosense_core.sym
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/chronosense_core.sch
+.subckt chronosense_core out pad vref vdd vss
+*.iopin pad
+*.ipin vref
+*.opin out
+*.iopin vss
+*.iopin vdd
+x1 vdd pad vref vss vg ota
+x3 vdd sch schb vss inv
+x4 vdd schb out vss inv
+XXMRST ctn sch vss vss sg13_lv_nmos w=10u l=0.35u ng=1 m=1 mm_ok=1
+XXMPASS pad vg vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=20 mm_ok=1
+XXMMIR ctn vg vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=30 mm_ok=1
+XCc vg vss cap_cmim w=18.25u l=18.25u m=4 mm_ok=1
+XCT ctn vss cap_cmim w=25u l=25u m=16 mm_ok=1
+x2 vdd sch ctn vss schmitt
+.ends
+
+
+* expanding   symbol:  ota.sym # of pins=5
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/ota.sym
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/ota.sch
+.subckt ota vdd vin vip vss vout
+*.opin vout
+*.ipin vin
+*.ipin vip
+*.iopin vdd
+*.iopin vss
+XM1 vx vin vtail vss sg13_lv_nmos w=5u l=0.5u ng=1 m=4 mm_ok=1
+XM3 vx vx vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM2 vout vip vtail vss sg13_lv_nmos w=5u l=0.5u ng=1 m=4 mm_ok=1
+XM6 vb vb vss vss sg13_lv_nmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM5 vtail vb vss vss sg13_lv_nmos w=5u l=1u ng=1 m=2 mm_ok=1
+XM4 vout vx vdd vdd sg13_lv_pmos w=5u l=1u ng=1 m=2 mm_ok=1
+XR2 vdd vb vss rppd w=1u l=115.79u m=1 b=0 mm_ok=1
+.ends
+
+
+* expanding   symbol:  inv.sym # of pins=4
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/inv.sym
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/inv.sch
+.subckt inv vdd in out vss
+*.ipin in
+*.opin out
+*.iopin vdd
+*.iopin vss
+XM1 out in vdd vdd sg13_lv_pmos w=2u l=0.35u ng=1 m=1 mm_ok=1
+XM2 out in vss vss sg13_lv_nmos w=1u l=0.35u ng=1 m=1 mm_ok=1
+.ends
+
+
+* expanding   symbol:  schmitt.sym # of pins=4
+** sym_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/schmitt.sym
+** sch_path: /foss/designs/Hei_Chips/ChronoSense-1/macros/heichips26_chronosense/schematic/xschem/schmitt.sch
+.subckt schmitt vdd out in vss
+*.ipin in
+*.iopin vdd
+*.iopin vss
+*.opin out
+XM1 x in vss vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM2 y in vdd vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+XM3 net1 in x vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM4 x net1 vdd vss sg13_lv_nmos w=3u l=0.35u ng=1 m=1 mm_ok=1
+XM5 net1 in y vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+XM6 y net1 vss vdd sg13_lv_pmos w=6u l=0.35u ng=1 m=1 mm_ok=1
+x1 vdd net1 out vss inv
+.ends
+
+.end
