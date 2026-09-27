@@ -2,7 +2,7 @@
 **.subckt tb_core
 x1 out net3 net2 net1 0 chronosense_core
 V2 net2 0 0.6
-V3 net1 0 1.2
+V3 net1 0 1.32
 R1 net3 0 1760
 **** begin user architecture code
 

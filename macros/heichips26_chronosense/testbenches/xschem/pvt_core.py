@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
 ChronoSense-1 PVT harness for the transistor-level core.
-
-Reads the xschem-exported tb_core.spice, generates one netlist per (corner, vdd, temp, R) point, runs them in batch, and reports linearity.
+Reads the xschem-exported tb_core.spice, generates one netlist per (corner, vdd, temp, R) point,
+runs them in batch, and reports linearity.
 """
-
 import argparse, os, re, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
@@ -21,7 +20,6 @@ TIMEOUT   = 300
 # node names from xschem. update if the schematic is re-netlisted.
 N_OUT, N_CTN, N_PAD = "out", "x1.ctn", "net3"
 
-
 def build(corner, vdd, temp, R, res="res_typ", cap="cap_typ"):
     """Return the full text of one independent netlist."""
     txt = open(SRC).read()
@@ -32,13 +30,24 @@ def build(corner, vdd, temp, R, res="res_typ", cap="cap_typ"):
 
     txt, n = re.subn(r"(?m)^(\.lib\s+\S*cornerMOSlv\.lib\s+)\S+", rf"\g<1>{corner}", txt)
     assert n == 1, f"MOS corner matched {n} times"
+
     txt, n = re.subn(r"(?m)^(\.lib\s+\S*cornerRES\.lib\s+)\S+", rf"\g<1>{res}", txt)
     assert n == 1, "RES corner not set"
+
     txt, n = re.subn(r"(?m)^(\.lib\s+\S*cornerCAP\.lib\s+)\S+", rf"\g<1>{cap}", txt)
     assert n == 1, "CAP corner not set"
 
     txt, n = re.subn(r"(?m)^(\.param\s+VDD=)\S+", rf"\g<1>{vdd}", txt)
     assert n == 1, "VDD not set"
+
+    # *** NEW: actually change the voltage source that sets the supply ***
+    txt, n = re.subn(r"(?m)^V3\s+\S+\s+0\s+\S+\s*$", f"V3 net1 0 {vdd}", txt)
+    assert n == 1, "supply source V3 not set"
+
+    # Optional: if you decide VREF should track VDD/2, uncomment the next two lines
+    # txt, n = re.subn(r"(?m)^V2\s+\S+\s+0\s+\S+\s*$", f"V2 net2 0 {vdd/2}", txt)
+    # assert n == 1, "VREF source V2 not set"
+
     txt = re.sub(r"(?m)^\.ic\s+.*$", f".ic v({N_CTN})={vdd/2:.4f}", txt)
     txt = re.sub(r"(?m)^\.param\s+VDD=", f".temp {temp}\n.param VDD=", txt, count=1)
 
@@ -72,18 +81,18 @@ def run_one(job):
     f   = os.path.join(d, f"r_{R}.spice")
     open(f, "w").write(build(corner, vdd, temp, R, res, cap))
 
-    # one thread per process, so 4 jobs use 4 cores
     env = dict(os.environ, OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1",
                MKL_NUM_THREADS="1")
     t0 = time.time()
     try:
-        p = subprocess.run(["ngspice", "-b", f], capture_output=True, text=True,
-                           timeout=TIMEOUT, env=env)
-        log = p.stdout + p.stderr
+        subprocess.run(["ngspice", "-b", "-o", f + ".log", f],
+                       timeout=TIMEOUT, env=env)
+        with open(f + ".log", "r") as log_file:
+            line = next((l for l in log_file if l.startswith("PVT ")), None)
     except subprocess.TimeoutExpired:
-        log = "KILLED BY TIMEOUT\n"
-    open(f + ".log", "w").write(log)
-    line = next((l for l in log.splitlines() if l.startswith("PVT ")), None)
+        with open(f + ".log", "w") as log_file:
+            log_file.write("KILLED BY TIMEOUT\n")
+        line = None
     return line, time.time() - t0, f
 
 
@@ -99,12 +108,12 @@ def analyse(path):
             R = float(p[6]); t20, vmax, vmin, vpad = (float(x) for x in p[7:11])
         except ValueError:
             dropped += 1; continue
-        if t20 <= 0 or vmax <= vmin:      # a dead run writes zeros, not an error
+        if t20 <= 0 or vmax <= vmin:
             dropped += 1; continue
         rows[key].append((R, t20 / 20.0, vmax, vmin, vpad))
         kept += 1
 
-    K = (T0 * T0) / BETA                  # fractional R error to degC, about 22.5
+    K = (T0 * T0) / BETA
     print(f"\nvalid points {kept}, rejected {dropped}\n")
     print(f"{'corner/vdd/temp/res/cap':34} {'ns/kohm':>9} {'icpt ns':>8} "
           f"{'dV mV':>7} {'dV spr%':>8} {'vpad mV':>8} {'ppmFS':>8} {'degC':>7} {'n':>3}")
@@ -120,8 +129,6 @@ def analyse(path):
             continue
         Rs  = [x[0] for x in d]; Ts = [x[1] for x in d]
         dVs = [x[2] - x[3] for x in d]; vps = [x[4] for x in d]
-
-        # two point calibration anchored at the endpoints
         a = (Ts[-1] - Ts[0]) / (Rs[-1] - Rs[0])
         b = Ts[0] - a * Rs[0]
         res_ns = [Ts[i] - (a * Rs[i] + b) for i in range(len(Rs))]
@@ -130,7 +137,6 @@ def analyse(path):
         ppm    = abs(worst) / span * 1e6
         degC   = K * (abs(worst) / a) / Rs[res_ns.index(worst)]
         dv_avg = sum(dVs) / len(dVs)
-
         print(f"{tag:34} {a*1e12:9.3f} {b*1e9:8.1f} {dv_avg*1e3:7.1f} "
               f"{(max(dVs)-min(dVs))/dv_avg*100:8.2f} {(max(vps)-min(vps))*1e3:8.2f} "
               f"{ppm:8.0f} {degC:7.3f} {len(d):3d}")
@@ -149,6 +155,7 @@ def analyse(path):
               f"{bo[2]/bo[1]/1000:.2f} kohm at {bo[0]}")
         print("\nNOTE degC uses NTC sensitivity at 25 C. The NTC is less sensitive "
               "hot, so\nread the worst case as up to 1.3x larger.")
+
     if incomplete:
         print(f"\nINCOMPLETE CONFIGS ({len(incomplete)}). Their calibration anchors "
               "moved, so\ntheir numbers are not comparable with the rest.")
@@ -177,7 +184,6 @@ def main():
         sys.exit(f"{SRC} not found, run from the directory holding it")
     os.makedirs(OUTDIR, exist_ok=True)
 
-    # time one run before committing to a batch
     if a.probe:
         line, dt, f = run_one(("mos_tt", 1.20, 27, 10000, "res_typ", "cap_typ"))
         print(f"one run: {dt:.1f} s")
@@ -192,12 +198,12 @@ def main():
     jobs = [(c, v, t, R, "res_typ", "cap_typ")
             for c in CORNERS for v in VDDS for t in TEMPS for R in RVALS]
     if a.rescap:
-        # R and C corners are gain errors, so they should cancel. two extremes confirm it.
         for res, cap in (("res_bcs", "cap_bcs"), ("res_wcs", "cap_wcs")):
             jobs += [("mos_tt", 1.20, 27, R, res, cap) for R in RVALS]
 
     print(f"{len(jobs)} runs, {a.jobs} parallel, {TIMEOUT} s timeout each")
     t0, done, killed, results = time.time(), 0, 0, []
+
     with ThreadPoolExecutor(max_workers=a.jobs) as ex:
         for line, dt, f in ex.map(run_one, jobs):
             done += 1
