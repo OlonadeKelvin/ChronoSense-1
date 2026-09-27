@@ -137,14 +137,14 @@ C {lab_pin.sym} 220 140 0 0 {name=p15 sig_type=std_logic lab=vb
 }
 C {iopin.sym} 280 340 1 0 {name=p16 lab=vss
 }
-C {sg13g2_pr/rppd.sym} -80 -10 0 0 {name=R2
+C {sg13g2_pr/rhigh.sym} -80 -10 0 0 {name=R1
 w=1u
-l=115.79u
-model=rppd
+l=21.063u
+model=rhigh
 body=vss
 spiceprefix=X
 b=0
  m=1
   mm_ok=1
-value="expr_eng(  ( 70.0e-6 / @w + 260.0 * ( (@b + 1)* @l + ( 1.081*( @w + 6.0e-9 ) + 0.18e-6 )*@b ) / ( @w + 6.0e-9 ) ) / @m  )"
+value="expr_eng(  ( 1.6e-4 / @w + 1360.0 * ( (@b + 1)* @l + ( 1.081*( @w - 0.04e-6 ) + 0.18e-6 )*@b ) / ( @w - 0.04e-6 ) ) / @m  )"
 }
