@@ -13,7 +13,8 @@ short-description: Resistance-to-frequency temperature sensor that self-calibrat
 # If your project requires additional external hardware, e.g. a USB port,
 # please mention this so we can consider it when designing the HeiChips PCB.
 long-description: |
-  Is this thing on?
+ChronoSense-1 measures temperature by turning an external NTC thermistor's resistance into an oscillation period, then cancelling its own error against two precision resistors on the board.
+
   
   This is a super cool project 👏
   
