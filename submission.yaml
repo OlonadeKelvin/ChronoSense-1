@@ -1,15 +1,13 @@
 # This the configuration file for your submission.
 # Please edit the fields below to match your project.
 
-project-name: Cool Project
-top-cell: "heichips26_digital_project" # Must be a unique name
+project-name: ChronoSense-1
+top-cell: "heichips26_chronosense" # Must be a unique name
 team-members:
-- Firstname Lastname
-- Firstname Lastname
-- Firstname Lastname
-slot-size: small # small, large, tiny
-analog-pins: 0 # 0-3, only for small or tiny projects
-short-description: This is a super cool project!
+- Kelvin Olonade
+slot-size: tiny # small, large, tiny
+analog-pins: 3 # 0-3, only for small or tiny projects
+short-description: Resistance-to-frequency temperature sensor that self-calibrates against two on-board reference resistors.
 # Please add the documentation about your project here.
 # Why did you choose to create it? How does it work? How can it be tested, etc.?
 # If your project requires additional external hardware, e.g. a USB port,
@@ -29,6 +27,6 @@ long-description: |
 # submission during the precheck.
 # Wildcards are allowed, but there
 # should only be a single match.
-gds-path: macros/heichips26_digital_project/final/gds/*.gds
-lef-path: macros/heichips26_digital_project/final/lef/*.lef
-header-path: macros/heichips26_digital_project/final/vh/*.vh
+gds-path: macros/heichips26_chronosense/final/gds/*.gds
+lef-path: macros/heichips26_chronosense/final/lef/*.lef
+header-path: macros/heichips26_chronosense/final/vh/*.vh
