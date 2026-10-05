@@ -31,3 +31,4 @@ long-description: |
 gds-path: macros/heichips26_schmitt/layout/heichips26_schmitt.gds
 lef-path: macros/heichips26_schmitt/layout/*.lef
 header-path: macros/heichips26_schmitt/layout/*.vh
+def-path: macros/heichips26_schmitt/layout/*.def
