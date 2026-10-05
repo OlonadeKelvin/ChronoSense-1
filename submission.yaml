@@ -28,7 +28,11 @@ long-description: |
 # submission during the precheck.
 # Wildcards are allowed, but there
 # should only be a single match.
+#gds-path: macros/heichips26_schmitt/layout/heichips26_schmitt.gds
+#lef-path: macros/heichips26_schmitt/layout/*.lef
+#header-path: macros/heichips26_schmitt/layout/*.vh
+#def-path: macros/heichips26_schmitt/layout/*.def
 gds-path: macros/heichips26_schmitt/layout/heichips26_schmitt.gds
-lef-path: macros/heichips26_schmitt/layout/*.lef
-header-path: macros/heichips26_schmitt/layout/*.vh
-def-path: macros/heichips26_schmitt/layout/*.def
+lef-path: macros/heichips26_schmitt/layout/heichips26_schmitt.lef
+header-path: macros/heichips26_schmitt/layout/heichips26_schmitt.vh
+def-path: macros/heichips26_schmitt/layout/heichips26_schmitt.def

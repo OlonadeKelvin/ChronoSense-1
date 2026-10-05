@@ -348,7 +348,7 @@ class PrecheckFlow(SequentialFlow):
         # Check also for forbidden layers.
         CheckSize,
         # Render the layout
-        KLayout.Render,
+        #KLayout.Render,
         # Check the density
         #KLayout.Density,
         #Checker.KLayoutDensity,
