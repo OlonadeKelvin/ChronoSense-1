@@ -553,7 +553,7 @@ Team members:
             with_initial_state=with_initial_state,
         )
     except FlowError as e:
-        err("The precheck failed with the following exception: \n{e}")
+        err(f"The precheck failed with the following exception: \n{e}")
         sys.exit(1)
 
     info(f"Precheck successfully completed.")
