@@ -7,6 +7,7 @@ team-members:
 - Kelvin Olonade
 slot-size: tiny # small, large, tiny
 analog-pins: 2 # 0-3, only for small or tiny projects
+uses-vapwr: false # set to "true" if separate analog power domain is needed
 short-description: Resistance-to-frequency temperature sensor that self-calibrates against two on-board reference resistors.
 # Please add the documentation about your project here.
 # Why did you choose to create it? How does it work? How can it be tested, etc.?
