@@ -1,0 +1,18 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO heichips26_schmitt
+  CLASS BLOCK ;
+  FOREIGN heichips26_schmitt ;
+  ORIGIN 0.000 0.000 ;
+  SIZE 200.000 BY 200.000 ;
+  PIN VPWR
+    DIRECTION INOUT ;
+    USE POWER ;
+  END VPWR
+  PIN VGND
+    DIRECTION INOUT ;
+    USE GROUND ;
+  END VGND
+END heichips26_schmitt
+END LIBRARY

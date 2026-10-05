@@ -2,19 +2,18 @@
 # Please edit the fields below to match your project.
 
 project-name: ChronoSense-1
-top-cell: "heichips26_chronosense" # Must be a unique name
+top-cell: "heichips26_schmitt" # Must be a unique name
 team-members:
 - Kelvin Olonade
 slot-size: tiny # small, large, tiny
-analog-pins: 3 # 0-3, only for small or tiny projects
+analog-pins: 0 # 0-3, only for small or tiny projects
 short-description: Resistance-to-frequency temperature sensor that self-calibrates against two on-board reference resistors.
 # Please add the documentation about your project here.
 # Why did you choose to create it? How does it work? How can it be tested, etc.?
 # If your project requires additional external hardware, e.g. a USB port,
 # please mention this so we can consider it when designing the HeiChips PCB.
 long-description: |
-ChronoSense-1 measures temperature by turning an external NTC thermistor's resistance into an oscillation period, then cancelling its own error against two precision resistors on the board.
-
+  ChronoSense-1 measures temperature by turning an external NTC thermistor's resistance into an oscillation period, then cancelling its own error against two precision resistors on the board.
   
   This is a super cool project 👏
   
@@ -28,6 +27,6 @@ ChronoSense-1 measures temperature by turning an external NTC thermistor's resis
 # submission during the precheck.
 # Wildcards are allowed, but there
 # should only be a single match.
-gds-path: macros/heichips26_chronosense/final/gds/*.gds
-lef-path: macros/heichips26_chronosense/final/lef/*.lef
-header-path: macros/heichips26_chronosense/final/vh/*.vh
+gds-path: macros/heichips26_schmitt/layout/heichips26_schmitt.gds
+lef-path: macros/heichips26_schmitt/layout/*.lef
+header-path: macros/heichips26_schmitt/layout/*.vh
